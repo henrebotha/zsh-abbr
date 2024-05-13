@@ -1060,6 +1060,18 @@ _abbr_regular_expansion() {
     expansion=$ABBR_REGULAR_USER_ABBREVIATIONS[${(qqq)abbreviation}]
   fi
 
+  if [[ $ABBR_PREFIXES ]]; then
+    for prefix in $ABBR_PREFIXES; do
+      if [[ ! $expansion ]]; then
+        abbreviation_sans_prefix="${abbreviation#$prefix }"
+        expansion_sans_prefix="${ABBR_REGULAR_USER_ABBREVIATIONS[${(qqq)abbreviation_sans_prefix}]}"
+        if [[ "$expansion_sans_prefix" ]]; then
+          expansion="$prefix $expansion_sans_prefix"
+        fi
+      fi
+    done
+  fi
+
   'builtin' 'echo' - ${(Q)expansion}
 }
 
